@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 
-module.exports = (sequelize) => {
+module.exports = sequelize => {
   sequelize.define("Todos", {
     id: {
       type: DataTypes.INTEGER,
@@ -15,6 +15,10 @@ module.exports = (sequelize) => {
     },
     description: {
       type: DataTypes.STRING,
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   });
 };

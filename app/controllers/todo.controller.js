@@ -38,8 +38,9 @@ exports.findByID = async (req, res) => {
 
 exports.updateByID = async (req, res) => {
   const id = getIdParam(req);
+  console.log(id);
   const [num] = await Todos.update(req.body, { where: { id } });
-
+  console.log(num);
   if (num === 1) {
     res.sendStatus(204);
   } else {

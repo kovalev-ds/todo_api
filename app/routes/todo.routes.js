@@ -8,7 +8,7 @@ const {
 
 const { asyncHandler } = require("../utils");
 
-module.exports = (app) => {
+module.exports = app => {
   const router = require("express").Router();
 
   router.route("/").get(asyncHandler(findAll)).post(asyncHandler(create));
@@ -18,5 +18,5 @@ module.exports = (app) => {
     .put(asyncHandler(updateByID))
     .delete(asyncHandler(deleteByID));
 
-  app.use("/api/todos", router);
+  app.use("/api/tasks", router);
 };
