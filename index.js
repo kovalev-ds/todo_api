@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8000;
           console.log("> server up and running on port: ", PORT)
         );
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 })();
