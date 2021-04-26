@@ -11,10 +11,8 @@ app.use((err, req, res, next) => {
   res.sendStatus(500);
 });
 
-console.log(process.cwd());
-
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(process.cwd(), "../todo-react/dist", "index.html"));
+  res.sendFile(path.resolve(process.cwd(), "public", "index.html"));
 });
 
 module.exports = app;
