@@ -1,3 +1,4 @@
+const protect = require("../middleware/protect.middleware");
 const {
   findAll,
   create,
@@ -6,17 +7,11 @@ const {
   deleteByID,
 } = require("../controllers/todo.controller");
 
-const { asyncHandler } = require("../utils");
-
 module.exports = app => {
   const router = require("express").Router();
 
-  router.route("/").get(asyncHandler(findAll)).post(asyncHandler(create));
-  router
-    .route("/:id")
-    .get(asyncHandler(findByID))
-    .put(asyncHandler(updateByID))
-    .delete(asyncHandler(deleteByID));
+  router.route("/").get(findAll).post(create);
+  router.route("/:id").get(findByID).put(updateByID).delete(deleteByID);
 
-  app.use("/api/tasks", router);
+  app.use("/api/tasks", protect, router);
 };

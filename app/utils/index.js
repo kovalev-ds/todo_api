@@ -1,4 +1,4 @@
-const getIdParam = (req) => {
+const getIdParam = req => {
   const id = req.params.id;
   if (/^\d+$/.test(id)) {
     return Number.parseInt(id, 10);
@@ -6,7 +6,7 @@ const getIdParam = (req) => {
   throw new Error(`Invalid ':id' param: "${id}"`);
 };
 
-const asyncHandler = (fn) =>
+const asyncHandler = fn =>
   function asyncHandlerWrap(...args) {
     const fnReturn = fn(...args);
     const next = args[args.length - 1];

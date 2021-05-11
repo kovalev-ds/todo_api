@@ -5,10 +5,13 @@ const sequelize = new Sequelize(process.env.POSTGRES_DB_URL, {
   logging: false,
 });
 
-const modelDefiners = [require("./todo.model")];
+const Todo = require("./todo.model")(sequelize);
+const User = require("./user.model")(sequelize);
 
-for (const modelDefiner of modelDefiners) {
-  modelDefiner(sequelize);
-}
+User.hasMany(Todo, {
+  foreignKey: "userID",
+});
+
+Todo.belongsTo(User, { foreignKey: "userID" });
 
 module.exports = sequelize;

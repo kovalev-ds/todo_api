@@ -1,24 +1,25 @@
 const { DataTypes } = require("sequelize");
 
 module.exports = sequelize => {
-  return sequelize.define("Todos", {
+  return sequelize.define("Users", {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {},
     },
-    description: {
+    email: {
       type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
-    completed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   });
 };

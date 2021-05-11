@@ -1,15 +1,16 @@
 const { getIdParam } = require("../utils");
+const { asyncHandler } = require("../utils");
 
 const {
   models: { Todos },
 } = require("../models");
 
-exports.findAll = async (req, res) => {
-  const data = await Todos.findAll();
+exports.findAll = asyncHandler(async (req, res) => {
+  const data = await Todos.findAll({ where: { userID: req.user.id } });
   res.status(200).send(data);
-};
+});
 
-exports.create = async (req, res) => {
+exports.create = asyncHandler(async (req, res) => {
   if (!req.body.title) {
     res.status(422).send({ success: false, message: "" });
     return;
@@ -17,44 +18,45 @@ exports.create = async (req, res) => {
 
   const todo = {
     ...req.body,
+    userID: req.user.id,
     completed: false,
   };
 
   const data = await Todos.create(todo);
 
   res.status(201).send(data);
-};
+});
 
-exports.findByID = async (req, res) => {
+exports.findByID = asyncHandler(async (req, res) => {
   const id = getIdParam(req);
-  const data = await Todos.findByPk(id);
+  const data = await Todos.findOne({ where: { id, userID: req.user.id } });
 
   if (data) {
     res.send(data);
   } else {
     res.sendStatus(404);
   }
-};
+});
 
-exports.updateByID = async (req, res) => {
+exports.updateByID = asyncHandler(async (req, res) => {
   const id = getIdParam(req);
-  console.log(id);
-  const [num] = await Todos.update(req.body, { where: { id } });
-  console.log(num);
+  const [num] = await Todos.update(req.body, {
+    where: { id, userID: req.user.id },
+  });
   if (num === 1) {
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
   }
-};
+});
 
-exports.deleteByID = async (req, res) => {
+exports.deleteByID = asyncHandler(async (req, res) => {
   const id = getIdParam(req);
-  const num = await Todos.destroy({ where: { id } });
+  const num = await Todos.destroy({ where: { id, userID: req.user.id } });
 
   if (num === 1) {
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
   }
-};
+});
