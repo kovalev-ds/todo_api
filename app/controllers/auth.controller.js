@@ -55,3 +55,18 @@ exports.signup = asyncHandler(async (req, res) => {
     token,
   });
 });
+
+exports.me = asyncHandler(async (req, res) => {
+  const user = await Users.findByPk(req.user.id);
+
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: 86400,
+  });
+
+  res.json({
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    token,
+  });
+});
