@@ -13,7 +13,6 @@ module.exports = async (req, res, next) => {
 
   try {
     const { id } = jwt.verify(token.trim(), process.env.JWT_SECRET);
-    console.log("protect id: ", id);
     req.user = { id };
     // req.user = await Users.findByPk(id);
     next();

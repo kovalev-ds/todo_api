@@ -12,20 +12,13 @@ exports.signin = asyncHandler(async (req, res) => {
   const user = await Users.findOne({ where: { email } });
 
   if (!user || !bcrypt.compareSync(password, user.password)) {
-    res.sendStatus(401);
+    res.json(
+      formFailResponse("incorrect email or password. please try again.")
+    );
     return;
   }
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: 86400,
-  });
-
-  res.json({
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    token,
-  });
+  res.json(formSuccessResponse(user));
 });
 
 exports.signup = asyncHandler(async (req, res) => {
@@ -34,7 +27,7 @@ exports.signup = asyncHandler(async (req, res) => {
   const userExist = await Users.findOne({ where: { email } });
 
   if (userExist) {
-    res.json({ success: false, message: `email ${email} already in use.` });
+    res.json(formFailResponse(`email ${email} already in use.`));
     return;
   }
 
@@ -44,29 +37,32 @@ exports.signup = asyncHandler(async (req, res) => {
     username,
   });
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: 86400,
-  });
-
-  res.json({
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    token,
-  });
+  res.json(formSuccessResponse(user));
 });
 
 exports.me = asyncHandler(async (req, res) => {
   const user = await Users.findByPk(req.user.id);
 
+  res.json(formSuccessResponse(user));
+});
+
+function formSuccessResponse(user) {
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
     expiresIn: 86400,
   });
 
-  res.json({
+  return {
+    success: true,
+    token,
     id: user.id,
     username: user.username,
     email: user.email,
-    token,
-  });
-});
+  };
+}
+
+function formFailResponse(message) {
+  return {
+    success: false,
+    message,
+  };
+}

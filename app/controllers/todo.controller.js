@@ -12,7 +12,12 @@ exports.findAll = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
   if (!req.body.title) {
-    res.status(422).send({ success: false, message: "" });
+    res
+      .status(422)
+      .send({
+        success: false,
+        message: "you must provide 'title' of the task.",
+      });
     return;
   }
 
@@ -55,6 +60,18 @@ exports.deleteByID = asyncHandler(async (req, res) => {
   const num = await Todos.destroy({ where: { id, userID: req.user.id } });
 
   if (num === 1) {
+    res.sendStatus(204);
+  } else {
+    res.sendStatus(404);
+  }
+});
+
+exports.deleteMany = asyncHandler(async (req, res) => {
+  const num = await Todos.destroy({
+    where: { ...req.body, userID: req.user.id },
+  });
+
+  if (num >= 1) {
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
